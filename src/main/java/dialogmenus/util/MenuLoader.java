@@ -89,6 +89,22 @@ public class MenuLoader {
                                 .initial(initial)
                                 .step(step)
                                 .build());
+                    } else if (type.equalsIgnoreCase("choice")) {
+                        List<io.papermc.paper.registry.data.dialog.input.SingleOptionDialogInput.OptionEntry> entries = new ArrayList<>();
+                        ConfigurationSection optionsSection = inputConfig.getConfigurationSection("options");
+                        if (optionsSection != null) {
+                            for (String optKey : optionsSection.getKeys(false)) {
+                                Component optLabel = mm
+                                        .deserialize(parseText(plugin, player, optionsSection.getString(optKey)));
+                                entries.add(
+                                        io.papermc.paper.registry.data.dialog.input.SingleOptionDialogInput.OptionEntry
+                                                .create(
+                                                        optKey,
+                                                        optLabel,
+                                                        false));
+                            }
+                        }
+                        inputs.add(DialogInput.singleOption(key, label, entries).build());
                     }
                 }
                 baseBuilder.inputs(inputs);

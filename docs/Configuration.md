@@ -78,6 +78,20 @@ inputs:
     max: 100
     initial: 50
     step: 1.0 # По умолчанию 1.0 (целые числа)
+
+### `choice`
+Кнопка-переключатель для выбора одного варианта из списка.
+```yaml
+inputs:
+  my_choice:
+    type: choice
+    label: "Ваш пол"
+    options:
+      male: "<blue>Мужчина"
+      female: "<light_purple>Женщина"
+      other: "Другое"
+```
+*В действиях (actions) используйте `<input:my_choice>`, чтобы получить ключ выбранного варианта (например, `male`).*
 ```
 
 ---
