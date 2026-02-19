@@ -1,0 +1,37 @@
+title: "<gradient:gold:yellow>Advanced Dialog"
+type: multi-action
+body:
+  info:
+    type: text
+    content: "<gray>This dialog showcases <b>multi-action buttons</b> and <b>user inputs</b>."
+  item:
+    type: item
+    material: NETHERITE_INGOT
+    name: "<light_purple>Special Ingot"
+inputs:
+  user_name:
+    type: text
+    label: "<yellow>Enter Your Name"
+  quantity:
+    type: number-range
+    label: "<aqua>Quantity"
+    min: 1
+    max: 64
+    initial: 10
+buttons:
+  wiki:
+    text: "<blue>Minecraft Wiki"
+    hover: "<white>Click to open the wiki in your browser"
+    action:
+      type: url
+      value: "https://minecraft.wiki"
+  say_hi:
+    text: "<green>Say Hi"
+    hover: "Execute a command"
+    action:
+      type: command
+      value: "say Hello <player>!"
+  close:
+    text: "<red>Close"
+    action:
+      type: close
