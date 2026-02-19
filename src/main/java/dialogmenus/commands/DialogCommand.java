@@ -68,7 +68,7 @@ public class DialogCommand implements CommandExecutor, TabCompleter {
             }
 
             try {
-                Dialog dialog = MenuLoader.buildDialog(menuConfig);
+                Dialog dialog = MenuLoader.buildDialog(plugin, menuConfig, target);
                 target.showDialog(dialog);
                 sender.sendMessage("§aOpened menu " + menuName + " for " + target.getName());
             } catch (Exception e) {

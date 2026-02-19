@@ -1,4 +1,5 @@
 dialogmenus/DialogMenus.class
 dialogmenus/manager/MenuManager.class
 dialogmenus/commands/DialogCommand.class
+dialogmenus/ActionHandler.class
 dialogmenus/util/MenuLoader.class

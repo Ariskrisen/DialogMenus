@@ -1,5 +1,6 @@
 package dialogmenus.util;
 
+import dialogmenus.DialogMenus;
 import io.papermc.paper.dialog.Dialog;
 import io.papermc.paper.registry.data.dialog.ActionButton;
 import io.papermc.paper.registry.data.dialog.DialogBase;
@@ -25,12 +26,12 @@ public class MenuLoader {
 
     private static final MiniMessage mm = MiniMessage.miniMessage();
 
-    public static Dialog buildDialog(ConfigurationSection config) {
+    public static Dialog buildDialog(DialogMenus plugin, ConfigurationSection config, org.bukkit.entity.Player player) {
         return Dialog.create(factory -> {
             var builder = factory.empty();
 
             // Base
-            String titleStr = config.getString("title", "Dialog");
+            String titleStr = parseText(plugin, player, config.getString("title", "Dialog"));
             DialogBase.Builder baseBuilder = DialogBase.builder(mm.deserialize(titleStr));
 
             baseBuilder.canCloseWithEscape(config.getBoolean("can-close-with-escape", true));
@@ -46,7 +47,8 @@ public class MenuLoader {
 
                     String type = itemSection.getString("type", "text");
                     if (type.equalsIgnoreCase("text")) {
-                        bodies.add(DialogBody.plainMessage(mm.deserialize(itemSection.getString("content", ""))));
+                        String content = parseText(plugin, player, itemSection.getString("content", ""));
+                        bodies.add(DialogBody.plainMessage(mm.deserialize(content)));
                     } else if (type.equalsIgnoreCase("item")) {
                         Material material = Material.matchMaterial(itemSection.getString("material", "STONE"));
                         if (material != null && material.isItem()) {
@@ -54,7 +56,7 @@ public class MenuLoader {
                             String itemName = itemSection.getString("name");
                             if (itemName != null) {
                                 ItemMeta meta = item.getItemMeta();
-                                meta.displayName(mm.deserialize(itemName));
+                                meta.displayName(mm.deserialize(parseText(plugin, player, itemName)));
                                 item.setItemMeta(meta);
                             }
                             bodies.add(DialogBody.item(item).build());
@@ -74,7 +76,7 @@ public class MenuLoader {
                         continue;
 
                     String type = inputConfig.getString("type", "text");
-                    Component label = mm.deserialize(inputConfig.getString("label", key));
+                    Component label = mm.deserialize(parseText(plugin, player, inputConfig.getString("label", key)));
 
                     if (type.equalsIgnoreCase("text")) {
                         inputs.add(DialogInput.text(key, label).build());
@@ -92,16 +94,12 @@ public class MenuLoader {
 
             builder.base(baseBuilder.build());
 
-            // Note: onClose callback is not currently supported in the builder
-            // of the experimental Paper Dialogs API version 1.21.10.
-            // If needed, it would require a custom listener for dialog close events.
-
             // Type
             String typeStr = config.getString("type", "notice");
             if (typeStr.equalsIgnoreCase("notice")) {
                 ConfigurationSection buttonSection = config.getConfigurationSection("button");
                 if (buttonSection != null) {
-                    builder.type(DialogType.notice(parseButton(buttonSection)));
+                    builder.type(DialogType.notice(parseButton(plugin, player, buttonSection)));
                 } else {
                     builder.type(DialogType.notice());
                 }
@@ -109,7 +107,8 @@ public class MenuLoader {
                 ConfigurationSection yesSection = config.getConfigurationSection("yes-button");
                 ConfigurationSection noSection = config.getConfigurationSection("no-button");
                 if (yesSection != null && noSection != null) {
-                    builder.type(DialogType.confirmation(parseButton(yesSection), parseButton(noSection)));
+                    builder.type(DialogType.confirmation(parseButton(plugin, player, yesSection),
+                            parseButton(plugin, player, noSection)));
                 } else {
                     builder.type(DialogType.notice()); // Fallback
                 }
@@ -120,7 +119,7 @@ public class MenuLoader {
                     for (String key : buttonsSection.getKeys(false)) {
                         ConfigurationSection btnConfig = buttonsSection.getConfigurationSection(key);
                         if (btnConfig != null) {
-                            buttons.add(parseButton(btnConfig));
+                            buttons.add(parseButton(plugin, player, btnConfig));
                         }
                     }
                     builder.type(DialogType.multiAction(buttons).build());
@@ -128,34 +127,46 @@ public class MenuLoader {
                     builder.type(DialogType.notice()); // Fallback
                 }
             } else {
-                // Fallback for missing or invalid type
                 builder.type(DialogType.notice());
             }
         });
     }
 
-    private static ActionButton parseButton(ConfigurationSection section) {
-        Component text = mm.deserialize(section.getString("text", "OK"));
+    private static String parseText(DialogMenus plugin, org.bukkit.entity.Player player, String text) {
+        if (text == null)
+            return "";
+        if (plugin.isPlaceholderApiEnabled()) {
+            return me.clip.placeholderapi.PlaceholderAPI.setPlaceholders(player, text);
+        }
+        return text;
+    }
+
+    private static ActionButton parseButton(DialogMenus plugin, org.bukkit.entity.Player player,
+            ConfigurationSection section) {
+        Component text = mm.deserialize(parseText(plugin, player, section.getString("text", "OK")));
         ActionButton.Builder builder = ActionButton.builder(text);
 
         String hoverStr = section.getString("hover");
         if (hoverStr != null) {
-            builder.tooltip(mm.deserialize(hoverStr));
+            builder.tooltip(mm.deserialize(parseText(plugin, player, hoverStr)));
         }
 
-        ConfigurationSection actionSection = section.getConfigurationSection("action");
-        if (actionSection != null) {
-            String type = actionSection.getString("type", "");
-            String value = actionSection.getString("value", "");
+        if (section.contains("action")) {
+            List<Map<String, Object>> actionsList = new ArrayList<>();
 
-            if (type.equalsIgnoreCase("command")) {
-                // Command execution logic. Note: Server-side execution usually
-                // requires handling PlayerCustomClickEvent with this key.
-                builder.action(DialogAction.customClick(Key.key("dialogmenus:button_click"), null));
-            } else if (type.equalsIgnoreCase("url")) {
-                // builder.action(DialogAction.openUrl(value));
-            } else if (type.equalsIgnoreCase("clipboard")) {
-                // builder.action(DialogAction.copyToClipboard(value));
+            if (section.isList("action")) {
+                for (Map<?, ?> map : section.getMapList("action")) {
+                    actionsList.add((Map<String, Object>) map);
+                }
+            } else if (section.isConfigurationSection("action")) {
+                ConfigurationSection actionSection = section.getConfigurationSection("action");
+                actionsList.add(actionSection.getValues(false));
+            }
+
+            if (!actionsList.isEmpty()) {
+                String actionKey = "btn_" + java.util.UUID.randomUUID().toString();
+                plugin.getMenuManager().registerActions(actionKey, actionsList);
+                builder.action(DialogAction.customClick(Key.key("dialogmenus", actionKey), null));
             }
         }
 

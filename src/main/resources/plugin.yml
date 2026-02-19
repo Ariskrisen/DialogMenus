@@ -1,5 +1,6 @@
 name: DialogMenus
 version: '${project.version}'
+softdepend: [PlaceholderAPI]
 main: dialogmenus.DialogMenus
 api-version: '1.21'
 commands:

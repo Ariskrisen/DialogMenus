@@ -6,23 +6,28 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
 public class MenuManager {
 
     private final DialogMenus plugin;
-    private final File menusFolder;
+    private final File folder;
     private final Map<String, YamlConfiguration> menus = new HashMap<>();
+    private final Map<String, List<Map<String, Object>>> actionRegistry = new HashMap<>();
 
-    public MenuManager(DialogMenus plugin, File menusFolder) {
+    public MenuManager(DialogMenus plugin, File folder) {
         this.plugin = plugin;
-        this.menusFolder = menusFolder;
+        this.folder = folder;
     }
 
     public void loadMenus() {
         menus.clear();
-        File[] files = menusFolder.listFiles((dir, name) -> name.endsWith(".yml"));
+        actionRegistry.clear();
+        if (!folder.exists())
+            return;
+        File[] files = folder.listFiles((dir, name) -> name.endsWith(".yml"));
         if (files == null)
             return;
 
@@ -44,5 +49,13 @@ public class MenuManager {
 
     public java.util.Set<String> getMenuNames() {
         return menus.keySet();
+    }
+
+    public void registerActions(String key, List<Map<String, Object>> actions) {
+        actionRegistry.put(key, actions);
+    }
+
+    public List<Map<String, Object>> getActions(String key) {
+        return actionRegistry.get(key);
     }
 }
