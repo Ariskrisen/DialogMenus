@@ -1,7 +1,7 @@
-package me.antigravity.dialogmenus;
+package dialogmenus;
 
-import me.antigravity.dialogmenus.commands.DialogCommand;
-import me.antigravity.dialogmenus.manager.MenuManager;
+import dialogmenus.commands.DialogCommand;
+import dialogmenus.manager.MenuManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;

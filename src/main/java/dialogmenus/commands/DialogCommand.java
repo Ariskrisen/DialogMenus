@@ -1,8 +1,8 @@
-package me.antigravity.dialogmenus.commands;
+package dialogmenus.commands;
 
 import io.papermc.paper.dialog.Dialog;
-import me.antigravity.dialogmenus.DialogMenus;
-import me.antigravity.dialogmenus.util.MenuLoader;
+import dialogmenus.DialogMenus;
+import dialogmenus.util.MenuLoader;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -20,7 +20,8 @@ public class DialogCommand implements CommandExecutor {
     }
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label,
+            @NotNull String[] args) {
         if (args.length == 0) {
             sender.sendMessage("§cUsage: /dialogs <reload|open> [player] [menu]");
             return true;

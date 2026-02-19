@@ -1,7 +1,7 @@
-package me.antigravity.dialogmenus.manager;
+package dialogmenus.manager;
 
 import io.papermc.paper.dialog.Dialog;
-import me.antigravity.dialogmenus.DialogMenus;
+import dialogmenus.DialogMenus;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
@@ -23,7 +23,8 @@ public class MenuManager {
     public void loadMenus() {
         menus.clear();
         File[] files = menusFolder.listFiles((dir, name) -> name.endsWith(".yml"));
-        if (files == null) return;
+        if (files == null)
+            return;
 
         for (File file : files) {
             String name = file.getName().replace(".yml", "");

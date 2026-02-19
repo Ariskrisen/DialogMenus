@@ -1,4 +1,4 @@
-package me.antigravity.dialogmenus.util;
+package dialogmenus.util;
 
 import io.papermc.paper.dialog.Dialog;
 import io.papermc.paper.registry.data.dialog.ActionButton;

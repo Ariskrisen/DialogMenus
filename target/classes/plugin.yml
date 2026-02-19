@@ -1,6 +1,6 @@
 name: DialogMenus
 version: '${project.version}'
-main: me.antigravity.dialogmenus.DialogMenus
+main: dialogmenus.DialogMenus
 api-version: '1.21'
 commands:
   dialogmenus:
