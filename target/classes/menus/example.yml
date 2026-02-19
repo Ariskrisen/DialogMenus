@@ -1,0 +1,16 @@
+title: "<gold><bold>Main Menu"
+can-close-with-escape: true
+type: notice
+body:
+  msg1:
+    type: text
+    content: "<gray>Welcome to our server!"
+  msg2:
+    type: text
+    content: "<white>This menu is fully configurable."
+  item1:
+    type: item
+    material: NETHERITE_SWORD
+    name: "<red>Slayer of Bugs"
+button:
+  text: "<green>Close"

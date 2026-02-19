@@ -1,0 +1,4 @@
+me/antigravity/dialogmenus/manager/MenuManager.class
+me/antigravity/dialogmenus/commands/DialogCommand.class
+me/antigravity/dialogmenus/util/MenuLoader.class
+me/antigravity/dialogmenus/DialogMenus.class

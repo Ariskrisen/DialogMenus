@@ -1,0 +1,21 @@
+name: DialogMenus
+version: '${project.version}'
+main: me.antigravity.dialogmenus.DialogMenus
+api-version: '1.21'
+commands:
+  dialogmenus:
+    description: Main command for DialogMenus
+    aliases: [dm, dialogs, dim]
+permissions:
+  dialogmenus.admin:
+    description: Full access to DialogMenus
+    default: op
+    children:
+      dialogmenus.reload: true
+      dialogmenus.open: true
+  dialogmenus.reload:
+    description: Reload menus
+    default: op
+  dialogmenus.open:
+    description: Open menus for players
+    default: op
