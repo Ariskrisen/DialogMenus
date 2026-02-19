@@ -137,10 +137,11 @@ public class MenuLoader {
     private static String parseText(DialogMenus plugin, org.bukkit.entity.Player player, String text) {
         if (text == null)
             return "";
+        String parsed = text.replace("<player>", player.getName());
         if (plugin.isPlaceholderApiEnabled()) {
-            return me.clip.placeholderapi.PlaceholderAPI.setPlaceholders(player, text);
+            return me.clip.placeholderapi.PlaceholderAPI.setPlaceholders(player, parsed);
         }
-        return text;
+        return parsed;
     }
 
     private static ActionButton parseButton(DialogMenus plugin, org.bukkit.entity.Player player,

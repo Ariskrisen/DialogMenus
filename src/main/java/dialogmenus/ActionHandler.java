@@ -34,46 +34,85 @@ public class ActionHandler implements Listener {
         if (actions == null)
             return;
 
+        io.papermc.paper.dialog.DialogResponseView responseView = event.getDialogResponseView();
         for (Map<String, Object> action : actions) {
             String type = (String) action.get("type");
             String value = (String) action.get("value");
 
-            if (type == null || value == null)
+            if (type == null)
                 continue;
 
             if (type.equalsIgnoreCase("command")) {
-                String cmd = parseActionValue(player, value);
-                Bukkit.getScheduler().runTask(plugin, () -> {
-                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd);
-                });
+                Bukkit.getScheduler().runTask(plugin, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
+                        parseActionValue(player, value, responseView)));
             } else if (type.equalsIgnoreCase("message")) {
-                String msg = parseActionValue(player, value);
-                player.sendMessage(net.kyori.adventure.text.minimessage.MiniMessage.miniMessage().deserialize(msg));
+                player.sendMessage(net.kyori.adventure.text.minimessage.MiniMessage.miniMessage()
+                        .deserialize(parseActionValue(player, value, responseView)));
             } else if (type.equalsIgnoreCase("url")) {
-                String url = parseActionValue(player, value);
+                String url = parseActionValue(player, value, responseView);
                 player.sendMessage(net.kyori.adventure.text.minimessage.MiniMessage.miniMessage().deserialize(
-                        "<click:open_url:'" + url + "'><underlined><blue>" + url + "</blue></underlined></click>"));
+                        "<click:open_url:'" + url + "'><gray>Click to open: <underlined><blue>" + url
+                                + "</blue></underlined></click>"));
+            } else if (type.equalsIgnoreCase("clipboard")) {
+                String text = parseActionValue(player, value, responseView);
+                player.sendMessage(net.kyori.adventure.text.minimessage.MiniMessage.miniMessage().deserialize(
+                        "<click:copy_to_clipboard:'" + text + "'><gray>Click to copy: <gold>" + text
+                                + "</gold></click>"));
             } else if (type.equalsIgnoreCase("close")) {
                 Bukkit.getScheduler().runTask(plugin, player::closeDialog);
             } else if (type.equalsIgnoreCase("open")) {
-                String nextMenu = parseActionValue(player, value);
-                org.bukkit.configuration.file.YamlConfiguration menuConfig = plugin.getMenuManager().getMenu(nextMenu);
+                String nextMenu = parseActionValue(player, value, responseView);
+                org.bukkit.configuration.file.YamlConfiguration menuConfig = plugin.getMenuManager()
+                        .getMenu(nextMenu);
                 if (menuConfig != null) {
-                    Bukkit.getScheduler().runTask(plugin, () -> {
+                    try {
                         io.papermc.paper.dialog.Dialog dialog = dialogmenus.util.MenuLoader.buildDialog(plugin,
                                 menuConfig, player);
-                        player.showDialog(dialog);
-                    });
+                        Bukkit.getScheduler().runTask(plugin, () -> player.showDialog(dialog));
+                    } catch (Exception e) {
+                        player.sendMessage("§cError opening menu: " + e.getMessage());
+                    }
                 } else {
-                    player.sendMessage(net.kyori.adventure.text.minimessage.MiniMessage.miniMessage().deserialize(
-                            "<red>Menu not found: " + nextMenu));
+                    player.sendMessage("§cMenu not found: " + nextMenu);
                 }
             }
         }
     }
 
-    private String parseActionValue(Player player, String value) {
+    private String parseActionValue(Player player, String value,
+            io.papermc.paper.dialog.DialogResponseView responseView) {
+        if (value == null)
+            return "";
         String parsed = value.replace("<player>", player.getName());
+
+        if (responseView != null) {
+            java.util.regex.Pattern pattern = java.util.regex.Pattern.compile("<input:([a-zA-Z0-9_-]+)>");
+            java.util.regex.Matcher matcher = pattern.matcher(parsed);
+            StringBuilder sb = new StringBuilder();
+            while (matcher.find()) {
+                String key = matcher.group(1);
+                String val = "";
+
+                String textVal = responseView.getText(key);
+                if (textVal != null) {
+                    val = textVal;
+                } else {
+                    Float floatVal = responseView.getFloat(key);
+                    if (floatVal != null) {
+                        val = String.valueOf(floatVal);
+                    } else {
+                        Boolean boolVal = responseView.getBoolean(key);
+                        if (boolVal != null) {
+                            val = String.valueOf(boolVal);
+                        }
+                    }
+                }
+                matcher.appendReplacement(sb, java.util.regex.Matcher.quoteReplacement(val));
+            }
+            matcher.appendTail(sb);
+            parsed = sb.toString();
+        }
+
         if (plugin.isPlaceholderApiEnabled()) {
             parsed = me.clip.placeholderapi.PlaceholderAPI.setPlaceholders(player, parsed);
         }

@@ -27,6 +27,8 @@ public class DialogMenus extends JavaPlugin {
         this.placeholderApiEnabled = Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null;
         if (placeholderApiEnabled) {
             getLogger().info("PlaceholderAPI integration enabled!");
+        } else {
+            getLogger().warning("PlaceholderAPI not found! Dynamic placeholders like %player_name% will not work.");
         }
 
         getServer().getPluginManager().registerEvents(new ActionHandler(this), this);

@@ -43,6 +43,26 @@ button:
 ### Встроенные
 - `<player>` — никнейм игрока (устарело, используйте PAPI).
 
+### Переменные ввода (Inputs)
+В действиях можно использовать данные, которые игрок ввел в поля ввода диалога:
+- `<input:ID>` — заменяется на значение поля с указанным ID.
+
+**Пример сохранения профиля:**
+```yaml
+inputs:
+  age:
+    type: number-range
+    label: "Ваш возраст"
+buttons:
+  save:
+    text: "Сохранить"
+    action:
+      - type: command
+        value: "profile set-age <player> <input:age>"
+      - type: message
+        value: "Возраст <input:age> сохранен!"
+```
+
 ### PlaceholderAPI (PAPI)
 Если на сервере установлен PlaceholderAPI, вы можете использовать любые плейсхолдеры:
 - `%player_name%`
