@@ -55,6 +55,19 @@ public class ActionHandler implements Listener {
                         "<click:open_url:'" + url + "'><underlined><blue>" + url + "</blue></underlined></click>"));
             } else if (type.equalsIgnoreCase("close")) {
                 Bukkit.getScheduler().runTask(plugin, player::closeDialog);
+            } else if (type.equalsIgnoreCase("open")) {
+                String nextMenu = parseActionValue(player, value);
+                org.bukkit.configuration.file.YamlConfiguration menuConfig = plugin.getMenuManager().getMenu(nextMenu);
+                if (menuConfig != null) {
+                    Bukkit.getScheduler().runTask(plugin, () -> {
+                        io.papermc.paper.dialog.Dialog dialog = dialogmenus.util.MenuLoader.buildDialog(plugin,
+                                menuConfig, player);
+                        player.showDialog(dialog);
+                    });
+                } else {
+                    player.sendMessage(net.kyori.adventure.text.minimessage.MiniMessage.miniMessage().deserialize(
+                            "<red>Menu not found: " + nextMenu));
+                }
             }
         }
     }

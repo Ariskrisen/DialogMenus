@@ -84,8 +84,10 @@ public class MenuLoader {
                         float min = (float) inputConfig.getDouble("min", 0.0);
                         float max = (float) inputConfig.getDouble("max", 100.0);
                         float initial = (float) inputConfig.getDouble("initial", min);
+                        float step = (float) inputConfig.getDouble("step", 1.0);
                         inputs.add(DialogInput.numberRange(key, label, min, max)
                                 .initial(initial)
+                                .step(step)
                                 .build());
                     }
                 }
