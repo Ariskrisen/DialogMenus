@@ -41,4 +41,8 @@ public class MenuManager {
     public YamlConfiguration getMenu(String name) {
         return menus.get(name.toLowerCase());
     }
+
+    public java.util.Set<String> getMenuNames() {
+        return menus.keySet();
+    }
 }

@@ -49,7 +49,7 @@ public class MenuLoader {
                         bodies.add(DialogBody.plainMessage(mm.deserialize(itemSection.getString("content", ""))));
                     } else if (type.equalsIgnoreCase("item")) {
                         Material material = Material.matchMaterial(itemSection.getString("material", "STONE"));
-                        if (material != null) {
+                        if (material != null && material.isItem()) {
                             ItemStack item = new ItemStack(material);
                             String itemName = itemSection.getString("name");
                             if (itemName != null) {
@@ -57,8 +57,6 @@ public class MenuLoader {
                                 meta.displayName(mm.deserialize(itemName));
                                 item.setItemMeta(meta);
                             }
-                            // Documentation implies plainMessage returns the body,
-                            // but item() returns a builder in 1.21.10
                             bodies.add(DialogBody.item(item).build());
                         }
                     }
@@ -129,6 +127,9 @@ public class MenuLoader {
                 } else {
                     builder.type(DialogType.notice()); // Fallback
                 }
+            } else {
+                // Fallback for missing or invalid type
+                builder.type(DialogType.notice());
             }
         });
     }

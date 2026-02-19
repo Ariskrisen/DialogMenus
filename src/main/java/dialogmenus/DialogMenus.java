@@ -22,7 +22,9 @@ public class DialogMenus extends JavaPlugin {
         this.menuManager = new MenuManager(this, menusFolder);
         this.menuManager.loadMenus();
 
-        getCommand("dialogmenus").setExecutor(new DialogCommand(this));
+        DialogCommand cmd = new DialogCommand(this);
+        getCommand("dialogmenus").setExecutor(cmd);
+        getCommand("dialogmenus").setTabCompleter(cmd);
 
         getLogger().info("DialogMenus has been enabled!");
     }
