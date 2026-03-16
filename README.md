@@ -5,7 +5,7 @@
 
 ## 📚 Вики и Документация
 Подробную информацию о настройке, командах и примерах вы найдете в нашей Вики:
-👉 **[Читать DialogMenus Wiki](https://github.com/Ariskrisen/DialogMenus/wiki)**
+👉 **[Читать DialogMenus Wiki](https://ariskrisen.github.io/Docs/docs/DialogMenus/intro)**
 
 ## 🚀 Особенности
 - **Настройка через YAML**: Создавайте меню, просто добавляя файлы в папку `menus/`.
