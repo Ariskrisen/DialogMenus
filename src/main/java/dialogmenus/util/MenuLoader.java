@@ -89,22 +89,13 @@ public class MenuLoader {
                                 .initial(initial)
                                 .step(step)
                                 .build());
-                    } else if (type.equalsIgnoreCase("choice")) {
-                        List<io.papermc.paper.registry.data.dialog.input.SingleOptionDialogInput.OptionEntry> entries = new ArrayList<>();
-                        ConfigurationSection optionsSection = inputConfig.getConfigurationSection("options");
-                        if (optionsSection != null) {
-                            for (String optKey : optionsSection.getKeys(false)) {
-                                Component optLabel = mm
-                                        .deserialize(parseText(plugin, player, optionsSection.getString(optKey)));
-                                entries.add(
-                                        io.papermc.paper.registry.data.dialog.input.SingleOptionDialogInput.OptionEntry
-                                                .create(
-                                                        optKey,
-                                                        optLabel,
-                                                        false));
-                            }
-                        }
-                        inputs.add(DialogInput.singleOption(key, label, entries).build());
+                    } else if (type.equalsIgnoreCase("toggle")) {
+                        boolean initial = inputConfig.getBoolean("initial", false);
+                        String onTrue = inputConfig.getString("on-true", "");
+                        String onFalse = inputConfig.getString("on-false", "");
+                        
+                        var toggleBuilder = DialogInput.bool(key, label).initial(initial).onTrue(onTrue).onFalse(onFalse);
+                        inputs.add(toggleBuilder.build());
                     }
                 }
                 baseBuilder.inputs(inputs);
@@ -154,10 +145,39 @@ public class MenuLoader {
         if (text == null)
             return "";
         String parsed = text.replace("<player>", player.getName());
+        
+        // Handle conditional placeholders: <%placeholder%?true:false>
+        parsed = parseConditionalPlaceholders(parsed, player, plugin);
+        
         if (plugin.isPlaceholderApiEnabled()) {
             return me.clip.placeholderapi.PlaceholderAPI.setPlaceholders(player, parsed);
         }
         return parsed;
+    }
+    
+    private static String parseConditionalPlaceholders(String text, org.bukkit.entity.Player player, DialogMenus plugin) {
+        // Pattern: <%placeholder%?trueValue:falseValue>
+        java.util.regex.Pattern pattern = java.util.regex.Pattern.compile("<%([^%]+)%\\?([^:]+):([^>]+)>");
+        java.util.regex.Matcher matcher = pattern.matcher(text);
+        StringBuffer sb = new StringBuffer();
+        
+        while (matcher.find()) {
+            String placeholder = matcher.group(1);
+            String trueValue = matcher.group(2);
+            String falseValue = matcher.group(3);
+            
+            // Get placeholder value
+            String value = "";
+            if (plugin.isPlaceholderApiEnabled()) {
+                value = me.clip.placeholderapi.PlaceholderAPI.setPlaceholders(player, "%" + placeholder + "%");
+            }
+            
+            // Replace with true/false value
+            String replacement = value.equals("true") ? trueValue : falseValue;
+            matcher.appendReplacement(sb, java.util.regex.Matcher.quoteReplacement(replacement));
+        }
+        matcher.appendTail(sb);
+        return sb.toString();
     }
 
     private static ActionButton parseButton(DialogMenus plugin, org.bukkit.entity.Player player,
