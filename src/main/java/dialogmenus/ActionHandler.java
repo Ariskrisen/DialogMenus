@@ -45,6 +45,9 @@ public class ActionHandler implements Listener {
             if (type.equalsIgnoreCase("command")) {
                 Bukkit.getScheduler().runTask(plugin, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
                         parseActionValue(player, value, responseView)));
+            } else if (type.equalsIgnoreCase("playercommand")) {
+                Bukkit.getScheduler().runTask(plugin, () -> Bukkit.dispatchCommand(player,
+                        parseActionValue(player, value, responseView)));
             } else if (type.equalsIgnoreCase("message")) {
                 player.sendMessage(net.kyori.adventure.text.minimessage.MiniMessage.miniMessage()
                         .deserialize(parseActionValue(player, value, responseView)));
