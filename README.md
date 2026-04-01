@@ -2,9 +2,12 @@
 
 **DialogMenus** is a powerful and easy-to-configure plugin for Minecraft 1.21.10+ that allows you to create in-game menus using the native **Paper Dialogs API**. No more chest-like interfaces – just modern, fluid dialogs!
 
-## 📚 Wiki and Documentation
-For detailed information on setup, commands, and examples, check out our Wiki:
-👉 **[Read DialogMenus Wiki](https://ariskrisen.github.io/Docs/docs/DialogMenus/intro)**
+## Documentation
+
+| Language | Link |
+|----------|------|
+| 🇷🇺 Русский | [https://ariskrisen.github.io/Docs/docs/DialogMenus/intro](https://ariskrisen.github.io/Docs/docs/DialogMenus/intro) |
+| 🇬🇧 English | [https://ariskrisen.github.io/Docs/en/docs/DialogMenus/intro/](https://ariskrisen.github.io/Docs/en/docs/DialogMenus/intro/) |
 
 ## 🚀 Features
 - **Configuration via YAML**: Create menus by simply adding files to the `menus/` folder.
