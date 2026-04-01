@@ -1,148 +1,147 @@
 # DialogMenus
 
-**DialogMenus** — это мощный и легкий в настройке плагин для Minecraft 1.21.10+, который позволяет создавать внутриигровые меню с использованием нативного **Paper Dialogs API**. Больше никаких сундуков-интерфейсов — только современные, плавные диалоги!
+**DialogMenus** is a powerful and easy-to-configure plugin for Minecraft 1.21.10+ that allows you to create in-game menus using the native **Paper Dialogs API**. No more chest-like interfaces – just modern, fluid dialogs!
 
+## 📚 Wiki and Documentation
+For detailed information on setup, commands, and examples, check out our Wiki:
+👉 **[Read DialogMenus Wiki](https://ariskrisen.github.io/Docs/docs/DialogMenus/intro)**
 
-## 📚 Вики и Документация
-Подробную информацию о настройке, командах и примерах вы найдете в нашей Вики:
-👉 **[Читать DialogMenus Wiki](https://ariskrisen.github.io/Docs/docs/DialogMenus/intro)**
-
-## 🚀 Особенности
-- **Настройка через YAML**: Создавайте меню, просто добавляя файлы в папку `menus/`.
-- **MiniMessage**: Полная поддержка современных градиентов и форматирования текста (например, `<gold><bold>Заголовок`).
-- **Два типа диалогов**: 
-  - `notice`: Обычное информационное окно с одной кнопкой.
-  - `confirmation`: Окно подтверждения с кнопками "Да" и "Нет".
-  - `multi-action`: Меню с любым количеством кнопок.
-- **Интерактивные поля (Inputs)**: Добавляйте текстовые поля и ползунки для ввода чисел.
-- **Действия кнопок**: Поддержка цепочек действий (команды, сообщения, ссылки, закрытие окон).
-- **Динамическое тело**: Добавляйте неограниченное количество текстовых сообщений и предметов в тело диалога.
-- **Интеграция с PlaceholderAPI**: Используйте любые плейсхолдеры в текстах, заголовках и командах.
-
----
-
-## 🛠 Установка
-1. Скачайте/скомпилируйте `DialogMenus.jar`.
-2. Поместите его в папку `plugins` вашего сервера Paper 1.21.10+.
-3. Запустите сервер. Плагин автоматически создаст папку `plugins/DialogMenus/menus/` с примером.
+## 🚀 Features
+- **Configuration via YAML**: Create menus by simply adding files to the `menus/` folder.
+- **MiniMessage**: Full support for modern gradients and text formatting (e.g. `<gold><bold>Title`).
+- **Two types of dialogs**:
+- `notice`: A standard information window with one button.
+- `confirmation`: A confirmation window with "Yes" and "No" buttons.
+- `multi-action`: A menu with any number of buttons.
+- **Interactive fields (Inputs)**: Add text fields and sliders for entering numbers.
+- **Button actions**: Support for action chains (commands, messages, links, closing windows).
+- **Dynamic body**: Add an unlimited number of text messages and items to the dialog body.
+- **PlaceholderAPI integration**: Use any placeholders in texts, titles, and commands.
 
 ---
 
-## 📂 Настройка меню
-Каждое меню — это отдельный файл `.yml` в папке `menus/`.
+## 🛠 Installation
+1. Download and compile `DialogMenus.jar`.
+2. Place it in the `plugins` folder of your Paper 1.21.10+ server.
+3. Start the server. The plugin will automatically create the `plugins/DialogMenus/menus/` folder with an example.
 
-### Пример: `example.yml`
-```yaml
-title: "<gold><bold>Главное Меню"
+---
+
+## 📂 Configuring the Menu
+Each menu is a separate `.yml` file in the `menus/` folder.
+
+### Example: `example.yml`
+``yaml
+title: "<gold><bold>Main Menu"
 can-close-with-escape: true
 type: notice
 body:
-  text1:
-    type: text
-    content: "<gray>Добро пожаловать на наш сервер!"
-  text2:
-    type: text
-    content: "<white>Это меню настроено через YAML."
-  item1:
-    type: item
-    material: NETHERITE_SWORD
-    name: "<red>Меч Истины"
+text1:
+type: text
+content: "<gray>Welcome to our server!"
+text2:
+type: text
+content: "<white>This menu is configured via YAML."
+item1:
+type: item
+material: NETHERITE_SWORD
+name: "<red>Sword of Truth"
 button:
-  text: "<green>Закрыть"
+text: "<green>Close"
 ```
 
-### Пример: `confirm.yml` (Окно подтверждения)
+### Example: `confirm.yml` (Confirmation Window)
 ```yaml
-title: "<red>Внимание!"
+title: "<red>Attention!"
 type: confirmation
 body:
-  msg:
-    type: text
-    content: "Вы действительно хотите телепортироваться?"
+msg:
+type: text
+content: "Are you sure you want to teleport?"
 yes-button:
-  text: "<green>Да"
+text: "<green>Yes"
 no-button:
-  text: "<red>Нет"
-```
+text: "<red>No"
+``
 
-### Пример: `multi.yml` (Сложное меню с цепочкой действий)
+### Example: `multi.yml` (Complex Menu with Action Chain)
 ```yaml
-title: "<gradient:gold:yellow>Сложное Меню"
+title: "<gradient:gold:yellow>Complex Menu"
 type: multi-action
 body:
-  info:
-    type: text
-    content: "Выберите действие и получите награду, %player_name%!"
-inputs:
-  amount:
-    type: number-range
-    label: "Количество"
-    min: 1
-    max: 64
-    initial: 1
-buttons:
-  reward:
-    text: "<gold>Получить Алмаз"
-    hover: "Нажмите, чтобы получить награду"
-    action:
-      - type: command
-        value: "give %player_name% diamond 1"
-      - type: message
-        value: "<green>Вы получили алмаз!"
-      - type: close
-  cancel:
-    text: "<red>Отмена"
-    action:
-      type: close
+info:
+type: text
+content: "Choose an action and get a reward, %player_name%!"
+Inputs:
+Amount:
+Type: Number-Range
+Label: "Amount"
+Min: 1
+Max: 64
+Initial: 1
+Buttons:
+Reward:
+Text: "<gold>Get Diamond"
+Hover: "Click to get reward"
+Action:
+- Type: Command
+Value: "Give %player_name% diamond 1"
+- Type: Message
+Value: "<green>You got a diamond!"
+- Type: Close
+Cancel:
+Text: "<red>Cancel"
+Action:
+Type: Close
 ```
 
 ---
 
-## ⌨️ Команды и Алиасы
-Основная команда: `/dialogmenus`
-Алиасы: `/dim`
+## ⌨️ Commands and Aliases
+Main command: `/dialogmenus`
+Aliases: `/dim`
 
-| Команда | Описание | Пермишен |
+| Command | Description | Permission |
 | :--- | :--- | :--- |
-| `/dim reload` | Перезагрузить файлы меню | `dialogmenus.reload` |
-| `/dim open <игрок> <меню>` | Открыть меню для игрока | `dialogmenus.open` |
+| `/dim reload` | Reload menu files | `dialogmenus.reload` |
+| `/dim open <player> <menu>` | Open the menu for a player | `dialogmenus.open` |
 
 ---
 
-## 🔐 Права (Permissions)
-- `dialogmenus.admin`: Полный доступ ко всем командам (по умолчанию у OP).
-- `dialogmenus.reload`: Доступ к перезагрузке конфигов.
-- `dialogmenus.open`: Доступ к открытию меню игрокам.
+## 🔐 Permissions
+- `dialogmenus.admin`: Full access to all commands (default for OP).
+- `dialogmenus.reload`: Access to reload configs.
+- `dialogmenus.open`: Access to open the menu for players.
 
 ---
 
-## ⚙️ Синтаксис YAML
+## ⚙️ YAML Syntax
 
-| Параметр | Описание | Варианты |
+| Parameter | Description | Options |
 | :--- | :--- | :--- |
-| `title` | Заголовок диалога (MiniMessage) | Строка |
-| `type` | Тип окна | `notice`, `confirmation` |
-| `can-close-with-escape` | Закрытие на ESC | `true`, `false` |
-| `body` | Список элементов в центре | Раздел с элементами |
-| `body.[id].type` | Тип элемента тела | `text`, `item` |
-| `body.[id].content` | Текст (для типа `text`) | Строка |
-| `body.[id].material` | ID предмета (для типа `item`) | [Material Enum](https://jd.papermc.io/paper/1.21/org/bukkit/Material.html) |
-| `button` | Кнопка (для `notice`) | Раздел с `text` |
-| `yes-button` | Кнопка подтверждения | Раздел с `text` |
-| `no-button` | Кнопка отказа | Раздел с `text` |
-| `buttons` | Список кнопок (для `multi-action`) | Список разделов |
-| `inputs` | Поля ввода | Раздел с параметрами ввода |
-| `action` | Действие кнопки | Раздел с `type` и `value` |
+| `title` | Dialog title (MiniMessage) | String |
+| `type` | Window type | `notice`, `confirmation` |
+| `can-close-with-escape` | Close with ESC | `true`, `false` |
+| `body` | List of elements in the center | Section with elements |
+| `body.[id].type` | Body element type | `text`, `item` |
+| `body.[id].content` | Text (for type `text`) | String |
+| `body.[id].material` | Item ID (for type `item`) | [Material Enum](https://jd.papermc.io/paper/1.21/org/bukkit/Material.html) |
+| `button` | Button (for `notice`) | Section with `text` |
+| `yes-button` | Confirm button | Section with `text` |
+| `no-button` | Cancel button | Section with `text` |
+| `buttons` | List of buttons (for `multi-action`) | List of sections |
+| `inputs` | Input fields | Section with input parameters |
+| `action` | Button action | Section with `type` and `value` |
 
-### Типы ввода (Inputs)
-- `text`: Текстовое поле.
-- `number-range`: Ползунок (слайдер). Параметры: `min`, `max`, `initial`, `step` (по умолчанию `1.0` для целых чисел).
+### Inputs
+- `text`: Text field.
+- `number-range`: Slider. Parameters: `min`, `max`, `initial`, `step` (default: `1.0` for integers).
 
-### Действия (Actions)
-- `command`: Выполняет консольную команду (поддерживает `<player>` и плейсхолдеры).
-- `message`: Отправляет MiniMessage сообщение игроку.
-- `url`: Отправляет интерактивную ссылку в чат.
-- `close`: Закрывает текущий диалог.
-- `open`: Открывает другой диалог по его имени (например, `open confirm`).
+### Actions
+- `command`: Executes a console command (supports `<player>` and placeholders).
+- `message`: Sends a MiniMessage message to the player.
+- `url`: Sends a clickable link to the chat.
+- `close`: Closes the current dialog.
+- `open`: Opens another dialog by name (e.g., `open confirm`).
 
 ---
