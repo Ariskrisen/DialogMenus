@@ -10,9 +10,9 @@ For detailed information on setup, commands, and examples, check out our Wiki:
 - **Configuration via YAML**: Create menus by simply adding files to the `menus/` folder.
 - **MiniMessage**: Full support for modern gradients and text formatting (e.g. `<gold><bold>Title`).
 - **Two types of dialogs**:
-- `notice`: A standard information window with one button.
-- `confirmation`: A confirmation window with "Yes" and "No" buttons.
-- `multi-action`: A menu with any number of buttons.
+ - `notice`: A standard information window with one button.
+ - `confirmation`: A confirmation window with "Yes" and "No" buttons.
+ - `multi-action`: A menu with any number of buttons.
 - **Interactive fields (Inputs)**: Add text fields and sliders for entering numbers.
 - **Button actions**: Support for action chains (commands, messages, links, closing windows).
 - **Dynamic body**: Add an unlimited number of text messages and items to the dialog body.
@@ -31,7 +31,7 @@ For detailed information on setup, commands, and examples, check out our Wiki:
 Each menu is a separate `.yml` file in the `menus/` folder.
 
 ### Example: `example.yml`
-``yaml
+```yaml
 title: "<gold><bold>Main Menu"
 can-close-with-escape: true
 type: notice
