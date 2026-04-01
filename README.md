@@ -62,7 +62,7 @@ yes-button:
 text: "<green>Yes"
 no-button:
 text: "<red>No"
-``
+```
 
 ### Example: `multi.yml` (Complex Menu with Action Chain)
 ```yaml
